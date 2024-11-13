@@ -52,6 +52,7 @@ const Login = () => {
                             value={data.email}
                             onChange={handleChange}
                             required 
+                            autoComplete="username"
                         />
                         <FaUser className={styles.icon} />
                     </div>
