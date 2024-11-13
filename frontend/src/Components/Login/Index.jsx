@@ -43,7 +43,7 @@ const Login = () => {
         <div className={styles.wrapper}>
             <div className={`${styles['form-box']} ${styles.login}`}>
                 <form onSubmit={handleSubmit}>
-                    <h1>Welcome back to Banana Cipher</h1>
+                    <h1>Welcome to Banana Cipher!</h1>
                     <div className={styles['input-box']}>
                         <input 
                             type="email" 
