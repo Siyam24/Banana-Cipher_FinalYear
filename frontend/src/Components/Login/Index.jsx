@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaUser, FaLock } from "react-icons/fa";
+import { FaUser, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import styles from "./styles.module.css";
@@ -12,6 +12,7 @@ const Login = () => {
 
     const [errors, setErrors] = useState({});
     const [rememberMe, setRememberMe] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
 
     const handleChange = ({ currentTarget: input }) => {
@@ -55,15 +56,21 @@ const Login = () => {
                         <FaUser className={styles.icon} />
                     </div>
                     <div className={styles['input-box']}>
-                        <input 
-                            type="password" 
-                            placeholder='Password' 
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            placeholder='Password'
+                            required
                             name='password'
                             value={data.password}
                             onChange={handleChange}
-                            required 
+                            autoComplete="current-password"
                         />
-                        <FaLock className={styles.icon} />
+                        {!data.password && <FaLock className={styles.icon} />}
+                        {data.password && (
+                            <div className={styles['eye-icon']} onClick={() => setShowPassword(!showPassword)}>
+                                {showPassword ? <FaEyeSlash /> : <FaEye />}
+                            </div>
+                        )}
                     </div>
 
                     <div className={styles['remember-forgot']}>

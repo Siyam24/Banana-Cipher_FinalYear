@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaUser, FaLock } from "react-icons/fa";
+import { FaUser, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import axios from 'axios';
 import styles from "./styles.module.css";
@@ -15,6 +15,9 @@ const Registration = () => {
   const [errors, setErrors] = useState({});
   const [serverError, setServerError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); 
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); 
+
   const navigate = useNavigate();
 
   const handleChange = ({ currentTarget: input }) => {
@@ -78,7 +81,7 @@ const Registration = () => {
 
           <div className={styles['input-box']}>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder='Password'
               required
               name='password'
@@ -86,12 +89,17 @@ const Registration = () => {
               onChange={handleChange}
               autoComplete="new-password"
             />
-            <FaLock className={styles.icon} />
+            {!data.password && <FaLock className={styles.icon} />}
+            {data.password && (
+              <div className={styles['eye-icon']} onClick={() => setShowPassword(!showPassword)}>
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </div>
+            )}
           </div>
 
           <div className={styles['input-box']}>
             <input
-              type="password"
+              type={showConfirmPassword ? "text" : "password"}
               placeholder='Confirm Password'
               required
               name='confirmPassword'
@@ -99,7 +107,12 @@ const Registration = () => {
               autoComplete="new-password"
               onChange={handleChange}
             />
-            <FaLock className={styles.icon} />
+            {!data.confirmPassword && <FaLock className={styles.icon} />}
+            {data.confirmPassword && (
+              <div className={styles['eye-icon']} onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+              </div>
+            )}
           </div>
 
           <div className={styles['remember-forgot']}>
@@ -108,11 +121,12 @@ const Registration = () => {
             </label>
           </div>
 
-          {serverError && <div className={styles['error-message']}>{serverError}</div>}
-          {errors.userName && <div className={styles['error-message']}>{errors.userName}</div>}
-          {errors.email && <div className={styles['error-message']}>{errors.email}</div>}
-          {errors.password && <div className={styles['error-message']}>{errors.password}</div>}
-          {errors.confirmPassword && <div className={styles['error-message']}>{errors.confirmPassword}</div>}
+          <div className={styles['error-message']}>
+            {[serverError, errors.userName, errors.email, errors.password, errors.confirmPassword].map(
+              (error, index) =>
+                error && <div key={index} className='error-message'>{error}</div>
+            )}
+          </div>
           
           <button type="submit" disabled={loading}>
             {loading ? "Creating Your Account..." : "Sign Up"}

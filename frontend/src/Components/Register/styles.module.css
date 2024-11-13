@@ -1,7 +1,7 @@
 .wrapper {
     position: relative;
     width: 430px;
-    height: 610px;
+    height: 615px;
     border-radius: 10px;
     background: rgba(0, 51, 17, 0.8);
     color: #fff;
@@ -55,6 +55,16 @@
     transform: translateY(-50%);
     font-size: 16px;
     color: rgba(255, 235, 59, 0.7);
+  }
+
+  .eye-icon {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: rgba(255, 235, 59, 0.7);
+    cursor: pointer;
   }
   
   form .remember-forgot {
@@ -118,6 +128,6 @@
   .error-message {
     color: red;
     margin-top: 10px;
-    font-size: 14px;
+    font-size: 12px;
     text-align: center;
   }
