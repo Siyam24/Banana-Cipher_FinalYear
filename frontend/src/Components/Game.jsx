@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 const GamePage = () => {
-    const [questionImage, setQuestionImage] = useState('https://via.placeholder.com/300');
+    const [questionImage, setQuestionImage] = useState(null); // Start with null
     const [answer, setAnswer] = useState(null);
     const [userAnswer, setUserAnswer] = useState(null);
     const [timer, setTimer] = useState(30);
@@ -10,7 +10,7 @@ const GamePage = () => {
     const [gameOver, setGameOver] = useState(false);
     const [imageError, setImageError] = useState(false);
     const [isAnswering, setIsAnswering] = useState(false);
-    const [isPaused, setIsPaused] = useState(false); // Track paused state
+    const [isPaused, setIsPaused] = useState(false);
 
     const fetchQuestion = async () => {
         try {
@@ -26,28 +26,28 @@ const GamePage = () => {
             if (data && data.question && data.solution !== undefined) {
                 setQuestionImage(data.question);
                 setAnswer(data.solution);
-                setImageError(false); // Reset error state
+                setImageError(false);
             } else {
-                setImageError(true); // Handle invalid data
+                setImageError(true);
             }
         } catch (error) {
             console.error("Error fetching question data:", error);
-            setImageError(true); // Set error state if fetch fails
+            setImageError(true);
         } finally {
-            setIsAnswering(false); // Re-enable buttons after fetch is done
+            setIsAnswering(false);
         }
     };
 
     useEffect(() => {
-        fetchQuestion(); // Fetch first question on mount
+        fetchQuestion();
     }, []);
 
     useEffect(() => {
         if (timer > 0 && !gameOver && !isAnswering && !isPaused) {
             const countdown = setInterval(() => setTimer(prev => prev - 1), 1000);
-            return () => clearInterval(countdown); // Cleanup timer
+            return () => clearInterval(countdown);
         } else if (timer === 0 && !gameOver) {
-            handleGameOver(); // Game over when timer reaches 0
+            handleGameOver();
         }
     }, [timer, gameOver, isAnswering, isPaused]);
 
@@ -55,22 +55,22 @@ const GamePage = () => {
         setUserAnswer(number);
         if (number === answer) {
             setScore(prev => prev + 1);
-            fetchQuestion(); // Fetch next question on correct answer
-            setTimer(30); // Reset timer on correct answer
+            fetchQuestion();
+            setTimer(30);
         } else {
-            handleIncorrectAnswer(); // Handle wrong answer
+            handleIncorrectAnswer();
         }
     };
 
     const handleIncorrectAnswer = () => {
         setLives(prev => prev - 1);
         if (lives <= 1) {
-            handleGameOver(); // End game if no lives left
+            handleGameOver();
         }
     };
 
     const handleGameOver = () => {
-        setGameOver(true); // Set game over when lives or timer runs out
+        setGameOver(true);
     };
 
     const handleRestart = () => {
@@ -87,11 +87,11 @@ const GamePage = () => {
     };
 
     const renderLives = () => {
-        return '❤️'.repeat(lives); // Render lives as hearts
+        return '❤️'.repeat(lives);
     };
 
     const togglePause = () => {
-        setIsPaused(!isPaused); // Toggle the paused state
+        setIsPaused(!isPaused);
     };
 
     return (
@@ -120,12 +120,14 @@ const GamePage = () => {
                     <div className="question">
                         {imageError ? (
                             <p>Error loading image. Please try again later.</p>
-                        ) : (
+                        ) : questionImage ? (
                             <img 
                                 src={questionImage} 
                                 alt="Question" 
-                                onError={() => setImageError(true)} // Image load error handling
+                                onError={() => setImageError(true)} 
                             />
+                        ) : (
+                            <p>Loading question...</p>
                         )}
                     </div>
                     <div className="answers">
@@ -133,7 +135,7 @@ const GamePage = () => {
                             <button 
                                 key={number} 
                                 onClick={() => handleAnswerClick(number)} 
-                                disabled={isAnswering || isPaused} // Disable buttons while fetching question or paused
+                                disabled={isAnswering || isPaused} 
                             >
                                 {number}
                             </button>
