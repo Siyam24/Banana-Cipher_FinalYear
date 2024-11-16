@@ -4,7 +4,7 @@ import Login from './Components/Login/Index.jsx'
 import Home from './Components/Home.jsx'
 import Game from './Components/Game.jsx';
 import LeaderBoard from './Components/LeaderBoard.jsx';
-import GameOver from './Components/Gameover.jsx';
+import GameOver from './Components/GameOver.jsx';
 
 function App() {
   const user = localStorage.getItem("token");

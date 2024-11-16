@@ -15,7 +15,7 @@ const GamePage = () => {
     const [showQuitOverlay, setShowQuitOverlay] = useState(false);
     const [showRestartOverlay, setShowRestartOverlay] = useState(false);
     const [feedback, setFeedback] = useState("");
-    const [feedbackType, setFeedbackType] = useState(""); // "correct" or "wrong"
+    const [feedbackType, setFeedbackType] = useState("");
 
     const navigate = useNavigate();
 
@@ -55,7 +55,6 @@ const GamePage = () => {
     }, [timer, gameOver, isAnswering, isPaused]);
 
     const handleAnswerClick = (number) => {
-        // Clear feedback before processing the new answer
         setFeedback("");
         setFeedbackType("");
 
@@ -160,12 +159,18 @@ const GamePage = () => {
             )}
             {gameOver ? (
                 <div className="game-over">
-                    <h2>Game Over</h2>
-                    <p>Your Score: {score}</p>
-                    <p>Correct Answer: {answer}</p>
-                    <button onClick={handleRestart}>Restart</button>
-                    <button onClick={handleQuit}>Quit</button>
+                <h1 className="game-over-title">Game Over</h1>
+                <p className="game-over-score">🎯 Your Final Score: <strong>{score}</strong></p>
+                <p className="game-over-answer">📖 Correct Answer: <strong>{answer}</strong></p>
+                <div className="game-over-actions">
+                    <button className="game-over-btn" onClick={handleConfirmRestart}>
+                        🔄 Restart
+                    </button>
+                    <button className="game-over-btn quit-btn" onClick={handleLeave}>
+                        🚪 Quit
+                    </button>
                 </div>
+            </div>
             ) : (
                 <div className={`game-content ${isPaused ? 'blur' : ''}`}>
                     <div className="game-header">

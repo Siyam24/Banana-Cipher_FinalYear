@@ -466,3 +466,69 @@ background-color: #ffcc00;
   font-size: 16px;
 }
 }
+
+.game-over {
+  text-align: center;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin: auto;
+  max-width: 400px;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.game-over-title {
+  font-size: 2rem;
+  color: #dc3545;
+  margin-bottom: 10px;
+}
+
+.game-over-score,
+.game-over-answer {
+  font-size: 1.2rem;
+  color: #343a40;
+  margin-bottom: 10px;
+}
+
+.game-over-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.game-over-btn {
+  padding: 10px 20px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.game-over-btn:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.quit-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.quit-btn:hover {
+  background-color: #c82333;
+}
+
+/* Keyframe animation for fade-in effect */
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+      transform: translateY(-20px);
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
