@@ -1,38 +1,41 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import confetti from 'canvas-confetti';
 
 const GamePage = () => {
-    const [questionImage, setQuestionImage] = useState(null); // Start with null
+    const [questionImage, setQuestionImage] = useState(null);
     const [answer, setAnswer] = useState(null);
     const [userAnswer, setUserAnswer] = useState(null);
     const [timer, setTimer] = useState(30);
     const [lives, setLives] = useState(3);
     const [score, setScore] = useState(0);
     const [gameOver, setGameOver] = useState(false);
-    const [imageError, setImageError] = useState(false);
     const [isAnswering, setIsAnswering] = useState(false);
     const [isPaused, setIsPaused] = useState(false);
+    const [showQuitOverlay, setShowQuitOverlay] = useState(false);
+    const [showRestartOverlay, setShowRestartOverlay] = useState(false);
+    const [feedback, setFeedback] = useState("");
+    const [feedbackType, setFeedbackType] = useState(""); // "correct" or "wrong"
+
+    const navigate = useNavigate();
 
     const fetchQuestion = async () => {
         try {
             setIsAnswering(true);
             const response = await fetch('http://localhost:3000/api/question');
-    
+
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
-    
+
             const data = await response.json();
-    
+
             if (data && data.question && data.solution !== undefined) {
                 setQuestionImage(data.question);
                 setAnswer(data.solution);
-                setImageError(false);
-            } else {
-                setImageError(true);
             }
         } catch (error) {
             console.error("Error fetching question data:", error);
-            setImageError(true);
         } finally {
             setIsAnswering(false);
         }
@@ -52,14 +55,29 @@ const GamePage = () => {
     }, [timer, gameOver, isAnswering, isPaused]);
 
     const handleAnswerClick = (number) => {
+        // Clear feedback before processing the new answer
+        setFeedback("");
+        setFeedbackType("");
+
         setUserAnswer(number);
+
         if (number === answer) {
-            setScore(prev => prev + 1);
+            setScore(prev => prev + 10);
+            setFeedback("🎉 Excellent! You nailed it! Ready for the next challenge?");
+            setFeedbackType("correct");
+            confetti();
             fetchQuestion();
             setTimer(30);
         } else {
+            setFeedback("❌ Oops! That wasn't the right answer. Keep trying!");
+            setFeedbackType("wrong");
             handleIncorrectAnswer();
         }
+
+        setTimeout(() => {
+            setFeedback("");
+            setFeedbackType("");
+        }, 2000);
     };
 
     const handleIncorrectAnswer = () => {
@@ -74,16 +92,40 @@ const GamePage = () => {
     };
 
     const handleRestart = () => {
+        setIsPaused(true);
+        setShowRestartOverlay(true);
+    };
+
+    const handleConfirmRestart = () => {
         setLives(3);
         setScore(0);
         setGameOver(false);
         setUserAnswer(null);
+        setFeedback("");
+        setFeedbackType("");
         fetchQuestion();
         setTimer(30);
+        setIsPaused(false);
+        setShowRestartOverlay(false);
+    };
+
+    const handleCancelRestart = () => {
+        setShowRestartOverlay(false);
+        setIsPaused(false);
     };
 
     const handleQuit = () => {
-        console.log('Game quit!');
+        setIsPaused(true);
+        setShowQuitOverlay(true);
+    };
+
+    const handleLeave = () => {
+        navigate('/home');
+    };
+
+    const handleStay = () => {
+        setIsPaused(false);
+        setShowQuitOverlay(false);
     };
 
     const renderLives = () => {
@@ -96,10 +138,24 @@ const GamePage = () => {
 
     return (
         <div className="game-page">
-            {isPaused && (
+            {isPaused && !showQuitOverlay && !showRestartOverlay && (
                 <div className="pause-overlay">
-                    <h2>Game Paused</h2>
+                    <h2>Game Paused!</h2>
                     <button onClick={togglePause}>Resume</button>
+                </div>
+            )}
+            {showQuitOverlay && (
+                <div className="quit-overlay">
+                    <h2>Are you sure you want to quit?</h2>
+                    <button onClick={handleLeave}>Leave</button>
+                    <button onClick={handleStay}>Stay</button>
+                </div>
+            )}
+            {showRestartOverlay && (
+                <div className="quit-overlay">
+                    <h2>Are you sure you want to restart?</h2>
+                    <button onClick={handleConfirmRestart}>Yes</button>
+                    <button onClick={handleCancelRestart}>No</button>
                 </div>
             )}
             {gameOver ? (
@@ -118,33 +174,33 @@ const GamePage = () => {
                         <div className="timer">Time: {timer}s</div>
                     </div>
                     <div className="question">
-                        {imageError ? (
-                            <p>Error loading image. Please try again later.</p>
-                        ) : questionImage ? (
-                            <img 
-                                src={questionImage} 
-                                alt="Question" 
-                                onError={() => setImageError(true)} 
+                        {questionImage ? (
+                            <img
+                                src={questionImage}
+                                alt="Question"
                             />
                         ) : (
                             <p>Loading question...</p>
                         )}
                     </div>
+                    <div className={`feedback ${feedbackType}`}>
+                        <p>{feedback}</p>
+                    </div>
                     <div className="answers">
                         {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(number => (
-                            <button 
-                                key={number} 
-                                onClick={() => handleAnswerClick(number)} 
-                                disabled={isAnswering || isPaused} 
+                            <button
+                                key={number}
+                                onClick={() => handleAnswerClick(number)}
+                                disabled={isAnswering || isPaused}
                             >
                                 {number}
                             </button>
                         ))}
                     </div>
                     <div className="game-controls">
-                        <button onClick={handleRestart}>Restart</button>
-                        <button onClick={togglePause}>{isPaused ? "Resume" : "Pause"}</button>
                         <button onClick={handleQuit}>Quit</button>
+                        <button onClick={togglePause}>{isPaused ? "Resume" : "Pause"}</button>
+                        <button onClick={handleRestart}>Restart</button>
                     </div>
                 </div>
             )}
