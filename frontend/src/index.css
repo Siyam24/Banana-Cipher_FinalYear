@@ -20,8 +20,9 @@ background-position: center;
 .buttonContainer {
 display: flex;
 flex-direction: column;
-gap: 50px;
+gap: 30px;
 align-items: center;
+margin-top: 500px;
 }
 
 .homeButton {
