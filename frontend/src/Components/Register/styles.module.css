@@ -3,7 +3,8 @@
     width: 430px;
     height: 615px;
     border-radius: 10px;
-    background: rgba(0, 51, 17, 0.8);
+    background: rgba(0, 51, 17, 0.978);
+    /*background: rgba(0, 51, 17, 0.8);*/
     color: #fff;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
     overflow: hidden;

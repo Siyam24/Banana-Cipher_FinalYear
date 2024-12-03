@@ -86,9 +86,47 @@ const GamePage = () => {
         }
     };
 
-    const handleGameOver = () => {
+    const handleGameOver = async () => {
         setGameOver(true);
+    
+        const userName = localStorage.getItem("username"); // or from context/api
+        console.log("Retrieved username:", userName);
+    
+        console.log("Payload being sent:", {
+            userName,
+            score,
+        });
+    
+        if (!userName || typeof score !== 'number') {
+            console.error("Invalid data:", { userName, score });
+            return;
+        }
+    
+        try {
+            const response = await fetch('http://localhost:3000/api/update-score', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userName,
+                    score,
+                }),
+            });
+    
+            if (!response.ok) {
+                const errorMessage = await response.json();
+                throw new Error(`HTTP error! Status: ${response.status} - ${errorMessage.error}`);
+            }
+    
+            const data = await response.json();
+            console.log("Score updated successfully:", data);
+        } catch (error) {
+            console.error("Error updating score:", error);
+        }
     };
+    
+    
 
     const handleRestart = () => {
         setIsPaused(true);
