@@ -9,24 +9,19 @@ const LeaderBoard = () => {
 
     const fetchLeaderBoardData = async () => {
         try {
-            // Demo data for testing
-            const demoData = [
-                { username: 'Siyam', bestScore: 150 },
-                { username: 'Sham', bestScore: 140 },
-                { username: 'Dilu', bestScore: 130 },
-                { username: 'Nitie', bestScore: 120 },
-                { username: 'Virat', bestScore: 110 },
-                { username: 'Siyam2', bestScore: 100 },
-                { username: 'Sham2', bestScore: 90 },
-                { username: 'Dilu2', bestScore: 80 },
-                { username: 'Nitie2', bestScore: 70 },
-                { username: 'Virat2', bestScore: 60 }
-            ];
-            setLeaderBoardData(demoData);
-            setFilteredData(demoData);
+            const response = await fetch('http://localhost:3000/api/leaderboard');
+            if (!response.ok) {
+                throw new Error('Failed to fetch leaderboard data');
+            }
+
+            const data = await response.json();
+
+            const sortedData = data.users;
+            setLeaderBoardData(sortedData);
+            setFilteredData(sortedData);
         } catch (error) {
-            console.error("Error fetching leaderBoard data:", error);
-            setError("Unable to load leaderBoard data. Please try again later.");
+            console.error("Error fetching leaderboard data:", error);
+            setError("Unable to load leaderboard data. Please try again later.");
         }
     };
 
@@ -39,7 +34,7 @@ const LeaderBoard = () => {
         setSearchQuery(query);
 
         const filtered = leaderBoardData.filter((player) =>
-            player.username.toLowerCase().includes(query)
+            player.userName.toLowerCase().includes(query)
         );
         setFilteredData(filtered);
     };
@@ -65,17 +60,22 @@ const LeaderBoard = () => {
                         <tr>
                             <th>Rank</th>
                             <th>Username</th>
-                            <th>Best Score</th>
+                            <th>Score</th>
                         </tr>
                     </thead>
                     <tbody className="scrollable-tbody">
-                        {filteredData.map((player, index) => (
-                            <tr key={`${player.username}-${index}`}>
-                                <td>{index + 1}</td>
-                                <td>{player.username}</td>
-                                <td>{player.bestScore}</td>
-                            </tr>
-                        ))}
+                        {filteredData.map((player) => {
+                            const originalRank =
+                                leaderBoardData.findIndex((p) => p.userName === player.userName) + 1;
+
+                            return (
+                                <tr key={`${player.userName}-${originalRank}`}>
+                                    <td>{originalRank}</td>
+                                    <td>{player.userName}</td>
+                                    <td>{player.score}</td>
+                                </tr>
+                            );
+                        })}
                     </tbody>
                 </table>
             )}

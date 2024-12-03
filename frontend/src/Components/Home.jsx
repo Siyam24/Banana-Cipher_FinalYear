@@ -1,12 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
   const navigate = useNavigate();
+  const username = localStorage.getItem("username");
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+    }
+  }, [navigate]);
 
   const handleLogout = () => {
-        localStorage.removeItem("token");
-        navigate("/login");
+    localStorage.clear();
+    navigate("/login");
   };
 
   const handleNewGame = () => {
@@ -17,9 +25,9 @@ const Home = () => {
     navigate("/leader-board");
   };
 
-
   return (
     <div className='container'>
+      <h1>Welcome, {username || "Player"}!</h1>
       <div className='buttonContainer'>
         <button className='homeButton' onClick={handleNewGame}>New Game</button>
         <button className='homeButton' onClick={handleViewLeaderBoard}>Score!</button>

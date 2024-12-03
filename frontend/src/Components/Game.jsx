@@ -88,15 +88,8 @@ const GamePage = () => {
 
     const handleGameOver = async () => {
         setGameOver(true);
-    
-        const userName = localStorage.getItem("username"); // or from context/api
-        console.log("Retrieved username:", userName);
-    
-        console.log("Payload being sent:", {
-            userName,
-            score,
-        });
-    
+        const userName = localStorage.getItem("username");
+
         if (!userName || typeof score !== 'number') {
             console.error("Invalid data:", { userName, score });
             return;
@@ -108,10 +101,7 @@ const GamePage = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    userName,
-                    score,
-                }),
+                body: JSON.stringify({ userName, score }),
             });
     
             if (!response.ok) {
@@ -125,8 +115,6 @@ const GamePage = () => {
             console.error("Error updating score:", error);
         }
     };
-    
-    
 
     const handleRestart = () => {
         setIsPaused(true);
