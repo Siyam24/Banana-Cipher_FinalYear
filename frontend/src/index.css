@@ -1,56 +1,124 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
 * {
-margin: 0;
-padding: 0;
-box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-font-family: "Poppins", sans-serif;
-display: flex;
-justify-content: center;
-align-items: center;
-min-height: 100vh;
-background: url(./assets/mainBg.jpeg) no-repeat;
-background-size: cover;
-background-position: center;
+  font-family: "Poppins", sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: url(./assets/mainBg.jpeg) no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+.container {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.greeting {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #ffffff; /* Bright white for high contrast */
+  text-shadow: 0 4px 10px rgba(0, 0, 0, 0.8); /* Stronger shadow for better visibility */
+  animation: fadeIn 1s ease-in-out;
+  margin-bottom: 350px;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 20px 30px;
+  border-radius: 15px;
+  display: inline-block;
+}
+
+.greeting .username {
+  color: #ffd700;
+  text-decoration: none;
+  font-weight: bold;
 }
 
 .buttonContainer {
-display: flex;
-flex-direction: column;
-gap: 25px;
-align-items: center;
-margin-top: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  animation: slideIn 1s ease-in-out;
 }
 
 .homeButton {
-width: 350px;
-height: 90px;
-background: linear-gradient(45deg, #ffeb3b, #fbc02d);
-border: none;
-border-radius: 50px;
-box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
-font-size: 40px;
-font-weight: 700;
-color: #333;
-cursor: pointer;
-transition: transform 0.2s ease, background 0.3s ease, box-shadow 0.3s ease;
-text-transform: uppercase;
-letter-spacing: 1px;
+  width: 300px;
+  height: 80px;
+  background: linear-gradient(45deg, #ffeb3b, #fbc02d);
+  border: none;
+  border-radius: 50px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.3s ease, box-shadow 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .homeButton:hover {
-background: linear-gradient(45deg, #fdd835, #fbc02d);
-transform: scale(1.05);
-box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  background: linear-gradient(45deg, #fdd835, #fbc02d);
+  transform: scale(1.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
 }
 
 .homeButton:active {
-background: linear-gradient(45deg, #fbc02d, #fdd835);
-transform: scale(0.98);
-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+  background: linear-gradient(45deg, #fbc02d, #fdd835);
+  transform: scale(0.98);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+}
+
+.homeButton:focus {
+  outline: 3px solid #ffeb3b;
+  transform: scale(1.05);
+}
+
+@media screen and (max-width: 768px) {
+  .greeting {
+    font-size: 2.5rem;
+  }
+
+  .homeButton {
+    width: 90%;
+    height: 70px;
+    font-size: 1.2rem;
+  }
+}
+
+/* Keyframe Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .game-page {
