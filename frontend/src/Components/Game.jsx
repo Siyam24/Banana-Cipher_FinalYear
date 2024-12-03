@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import confetti from 'canvas-confetti';
+import { FaCog, FaPause, FaPlay, FaRedo, FaSignOutAlt, FaQuestionCircle } from "react-icons/fa";
 
 const GamePage = () => {
     const [questionImage, setQuestionImage] = useState(null);
@@ -16,6 +17,7 @@ const GamePage = () => {
     const [showRestartOverlay, setShowRestartOverlay] = useState(false);
     const [feedback, setFeedback] = useState("");
     const [feedbackType, setFeedbackType] = useState("");
+    const [showSettings, setShowSettings] = useState(false);
 
     const navigate = useNavigate();
 
@@ -46,13 +48,16 @@ const GamePage = () => {
     }, []);
 
     useEffect(() => {
+        let countdown;
         if (timer > 0 && !gameOver && !isAnswering && !isPaused) {
-            const countdown = setInterval(() => setTimer(prev => prev - 1), 1000);
-            return () => clearInterval(countdown);
+            countdown = setInterval(() => setTimer(prev => prev - 1), 1000);
         } else if (timer === 0 && !gameOver) {
             handleGameOver();
         }
+        return () => clearInterval(countdown);
     }, [timer, gameOver, isAnswering, isPaused]);
+
+    const resetTimer = () => setTimer(30);
 
     const handleAnswerClick = (number) => {
         setFeedback("");
@@ -66,7 +71,7 @@ const GamePage = () => {
             setFeedbackType("correct");
             confetti();
             fetchQuestion();
-            setTimer(30);
+            resetTimer();
         } else {
             setFeedback("❌ Oops! That wasn't the right answer. Keep trying!");
             setFeedbackType("wrong");
@@ -94,7 +99,7 @@ const GamePage = () => {
             console.error("Invalid data:", { userName, score });
             return;
         }
-    
+
         try {
             const response = await fetch('http://localhost:3000/api/update-score', {
                 method: 'POST',
@@ -103,12 +108,12 @@ const GamePage = () => {
                 },
                 body: JSON.stringify({ userName, score }),
             });
-    
+
             if (!response.ok) {
                 const errorMessage = await response.json();
                 throw new Error(`HTTP error! Status: ${response.status} - ${errorMessage.error}`);
             }
-    
+
             const data = await response.json();
             console.log("Score updated successfully:", data);
         } catch (error) {
@@ -129,7 +134,7 @@ const GamePage = () => {
         setFeedback("");
         setFeedbackType("");
         fetchQuestion();
-        setTimer(30);
+        resetTimer();
         setIsPaused(false);
         setShowRestartOverlay(false);
     };
@@ -161,48 +166,81 @@ const GamePage = () => {
         setIsPaused(!isPaused);
     };
 
+    const toggleSettings = () => {
+        setShowSettings(prev => !prev);
+    };
+
     return (
-        <div className="game-page">
-            {isPaused && !showQuitOverlay && !showRestartOverlay && (
-                <div className="pause-overlay">
-                    <h2>Game Paused!</h2>
-                    <button onClick={togglePause}>Resume</button>
-                </div>
-            )}
-            {showQuitOverlay && (
-                <div className="quit-overlay">
-                    <h2>Are you sure you want to quit?</h2>
-                    <button onClick={handleLeave}>Leave</button>
-                    <button onClick={handleStay}>Stay</button>
-                </div>
-            )}
-            {showRestartOverlay && (
-                <div className="quit-overlay">
-                    <h2>Are you sure you want to restart?</h2>
-                    <button onClick={handleConfirmRestart}>Yes</button>
-                    <button onClick={handleCancelRestart}>No</button>
-                </div>
-            )}
+            <div className="game-page">
+                {isPaused && !showQuitOverlay && !showRestartOverlay && (
+                    <div className="pause-overlay">
+                        <h2>Game Paused!</h2>
+                        <button onClick={togglePause}>
+                            <FaPlay style={{ marginRight: '8px' }} />
+                            Resume
+                        </button>
+                    </div>
+                )}
+                {showQuitOverlay && (
+                    <div className="quit-overlay">
+                        <h2>Are you sure you want to quit?</h2>
+                        <button onClick={handleLeave}>
+                            <FaSignOutAlt />
+                            Leave
+                        </button>
+                        <button onClick={handleStay}>
+                            <FaPause />
+                            Stay
+                        </button>
+                    </div>
+                )}
+                {showRestartOverlay && (
+                    <div className="quit-overlay">
+                        <h2>Are you sure you want to restart?</h2>
+                        <button onClick={handleConfirmRestart}>Yes</button>
+                        <button onClick={handleCancelRestart}>No</button>
+                    </div>
+                )}
             {gameOver ? (
                 <div className="game-over">
-                <h1 className="game-over-title">Game Over</h1>
-                <p className="game-over-score">🎯 Your Final Score: <strong>{score}</strong></p>
-                <p className="game-over-answer">📖 Correct Answer: <strong>{answer}</strong></p>
-                <div className="game-over-actions">
-                    <button className="game-over-btn" onClick={handleConfirmRestart}>
-                        🔄 Restart
-                    </button>
-                    <button className="game-over-btn quit-btn" onClick={handleLeave}>
-                        🚪 Quit
-                    </button>
+                    <h1 className="game-over-title">Game Over</h1>
+                    <p className="game-over-score">🎯 Your Final Score: <strong>{score}</strong></p>
+                    <p className="game-over-answer">📖 Correct Answer: <strong>{answer}</strong></p>
+                    <div className="game-over-actions">
+                        <button className="game-over-btn" onClick={handleConfirmRestart}>
+                        <FaRedo /> Restart
+                        </button>
+                        <button className="game-over-btn quit-btn" onClick={handleLeave}>
+                        <FaSignOutAlt /> Quit
+                        </button>
+                    </div>
                 </div>
-            </div>
             ) : (
                 <div className={`game-content ${isPaused ? 'blur' : ''}`}>
+                    <div className="settings">
+                        <button onClick={toggleSettings}><FaCog /></button>
+                        {showSettings && (
+                            <div className="settings-menu">
+                                <button onClick={togglePause}><FaPause />{isPaused ? "Resume" : "Pause"}</button>
+                                <button onClick={handleRestart}><FaRedo />Restart</button>
+                                <button onClick={handleQuit}><FaSignOutAlt />Quit</button>
+                                <button ><FaQuestionCircle />Help</button>
+                            </div>
+                        )}
+                    </div>
                     <div className="game-header">
                         <div className="lives">Lives: {renderLives()}</div>
+                        <div className="timer">
+                            <span
+                                style={{
+                                    color:  timer > 10 ? "yellow" : "red",
+                                    fontWeight: "bold",
+                                }}
+                            >
+                                Time: {timer}s
+                            </span>
+                        </div>
                         <div className="score">Score: {score}</div>
-                        <div className="timer">Time: {timer}s</div>
                     </div>
                     <div className="question">
                         {questionImage ? (
@@ -227,11 +265,6 @@ const GamePage = () => {
                                 {number}
                             </button>
                         ))}
-                    </div>
-                    <div className="game-controls">
-                        <button onClick={handleQuit}>Quit</button>
-                        <button onClick={togglePause}>{isPaused ? "Resume" : "Pause"}</button>
-                        <button onClick={handleRestart}>Restart</button>
                     </div>
                 </div>
             )}

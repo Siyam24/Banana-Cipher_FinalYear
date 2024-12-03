@@ -20,7 +20,7 @@ background-position: center;
 .buttonContainer {
 display: flex;
 flex-direction: column;
-gap: 30px;
+gap: 25px;
 align-items: center;
 margin-top: 500px;
 }
@@ -59,7 +59,7 @@ box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 60px;
+  padding: 70px;
   background: rgba(0, 51, 17, 0.9);
   position: relative;
 }
@@ -71,15 +71,86 @@ box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
 .game-header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   width: 100%;
   padding: 30px;
   color: #ffeb3b;
   font-size: 30px;
   font-weight: 600;
+  position: relative;
 }
 
 .game-header div {
-  margin: 0 10px;
+  margin: 0 30px;
+}
+
+.settings {
+  position: absolute;
+  top: 30px;
+  right: 50px;
+}
+
+.settings button {
+  font-size: 30px;
+  background: transparent;
+  border: none;
+  color: #ffeb3b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border-radius: 50%;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.settings button:hover {
+  background: rgba(255, 235, 59, 0.2);
+  transform: scale(1.1);
+}
+
+.settings:hover .settings-menu {
+  display: flex;
+}
+
+.settings-menu {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: #05321c;
+  border: 1px solid #ffeb3b;
+  border-radius: 10px;
+  padding: 25px;
+  flex-direction: column;
+  gap: 15px;
+  display: none; /* Hide the dropdown by default */
+  z-index: 10;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.settings-menu button {
+  padding: 10px 20px;
+  font-size: 18px;
+  cursor: pointer;
+  border: none;
+  gap: 8px;
+  background: linear-gradient(45deg, #ffeb3b, #fbc02d);
+  border-radius: 10px;
+  color: #333;
+  font-weight: 700;
+  transition: transform 0.2s ease, background 0.3s ease;
+  text-align: center;
+}
+
+.settings-menu button:hover {
+  background: linear-gradient(45deg, #fdd835, #fbc02d);
+  transform: scale(1.05);
+}
+
+.settings-menu button:active {
+  background: linear-gradient(45deg, #fbc02d, #ffeb3b);
+  transform: scale(0.95);
 }
 
 .question {
@@ -101,47 +172,29 @@ box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
   font-size: 20px;
   margin-top: 20px;
   text-align: center;
-  padding: 10px 30px;
+  padding: 10px 20px;
   border-radius: 10px;
+  height: 50px; /* Fixed height to prevent layout shifting */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  opacity: 0; /* Default hidden state */
+  transform: translateY(10px); /* Hidden by offset */
 }
 
 .feedback.correct {
-  background-color: #28a745;
+  background-color: #1db240;
   color: #fff;
-  animation: pulseEffect 1s ease-in-out;
+  opacity: 1; /* Visible state */
+  transform: translateY(0); /* Normal position */
 }
 
 .feedback.wrong {
-  background-color: #dc3545;
+  background-color: #e6273a;
   color: #fff;
-  animation: shakeEffectStatic 1s ease-in-out;
-}
-
-@keyframes pulseEffect {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-@keyframes shakeEffectStatic {
-  0%, 100% {
-    transform: translateX(0);
-  }
-  25% {
-    transform: translateX(-5px);
-  }
-  50% {
-    transform: translateX(5px);
-  }
-  75% {
-    transform: translateX(-5px);
-  }
+  opacity: 1; /* Visible state */
+  transform: translateY(0); /* Normal position */
 }
 
 .answers {
@@ -149,7 +202,7 @@ box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
   flex-wrap: wrap;
   justify-content: center;
   gap: 20px;
-  margin: 10px 0;
+  margin: 20px 0;
 }
 
 .answers button {
@@ -179,36 +232,6 @@ box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
   transform: scale(0.95);
 }
 
-.game-controls {
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  bottom: 20px;
-  left: 0;
-  right: 0;
-}
-
-.game-controls button {
-  width: 180px;
-  height: 60px;
-  background: #ffeb3b;
-  border: none;
-  border-radius: 40px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  color: #333;
-  font-weight: 700;
-  font-size: 18px;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
-}
-
-.game-controls button:hover {
-  background: #fdd835;
-  transform: scale(1.05);
-}
-
 .game-over {
   text-align: center;
 }
@@ -228,7 +251,7 @@ box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
 .game-over button {
   width: 200px;
   height: 60px;
-  background: #ffeb3b;
+  background: linear-gradient(45deg, #ffeb3b, #fbc02d);
   border: none;
   border-radius: 40px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
@@ -240,7 +263,7 @@ box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
 }
 
 .game-over button:hover {
-  background: #fdd835;
+  background: linear-gradient(45deg, #fdd835, #fbc02d);
   transform: scale(1.05);
 }
 
@@ -264,7 +287,7 @@ box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
 .pause-overlay h2,
 .quit-overlay h2,
 .restart-overlay h2 {
-  font-size: 32px;
+  font-size: 36px;
   margin-bottom: 20px;
   font-weight: 600;
 }
@@ -275,10 +298,11 @@ box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
   padding: 15px 30px;
   font-size: 18px;
   color: #333;
-  background: #ffeb3b;
+  background: linear-gradient(45deg, #ffeb3b, #fbc02d);
   border: none;
-  border-radius: 40px;
+  border-radius: 10px;
   font-weight: 700;
+  margin: 10px;
   cursor: pointer;
   transition: background 0.3s ease, transform 0.2s ease;
 }
@@ -286,18 +310,15 @@ box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
 .pause-overlay button:hover,
 .quit-overlay button:hover,
 .restart-overlay button:hover {
-  background: #fdd835;
+  background: linear-gradient(45deg, #fdd835, #fbc02d);
   transform: scale(1.05);
 }
 
-.quit-overlay .quit-buttons {
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-}
-
-.quit-overlay button {
-  margin: 10px;
+.pause-overlay button:active,
+.quit-overlay button:active,
+.restart-overlay button:active {
+  background: linear-gradient(45deg, #fbc02d, #ffeb3b);
+  transform: scale(0.95);
 }
 
 /* LeaderBoard page*/

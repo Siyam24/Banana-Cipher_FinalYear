@@ -30,7 +30,7 @@ const Home = () => {
       <h1>Welcome, {username || "Player"}!</h1>
       <div className='buttonContainer'>
         <button className='homeButton' onClick={handleNewGame}>New Game</button>
-        <button className='homeButton' onClick={handleViewLeaderBoard}>Score!</button>
+        <button className='homeButton' onClick={handleViewLeaderBoard}>Score-Board</button>
         <button className='homeButton' onClick={handleLogout}>Exit</button>
       </div>
     </div>
