@@ -5,7 +5,6 @@ const getLeaderBoard = async (req, res) => {
         const users = await User.find({}, { userName: 1, score: 1, _id: 0 })
             .sort({ score: -1 });
 
-        // Return the sorted data
         res.status(200).json({
             success: true,
             users,

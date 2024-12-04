@@ -16,7 +16,6 @@ const Home = () => {
 
     const fetchTime = async () => {
       try {
-        // Fetch time data for a specific timezone
         const response = await fetch("http://worldtimeapi.org/api/timezone/America/New_York");
         //http://worldtimeapi.org/api/timezone/Europe/London
         const data = await response.json();
@@ -24,7 +23,6 @@ const Home = () => {
         const currentTime = new Date(data.datetime);
         const hour = currentTime.getHours();
 
-        // Determine greeting based on the hour
         if (hour < 12) setGreeting("Good Morning");
         else if (hour < 18) setGreeting("Good Afternoon");
         else setGreeting("Good Evening");

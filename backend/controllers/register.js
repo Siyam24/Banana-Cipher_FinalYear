@@ -44,7 +44,6 @@ const registerUser = async (req, res) => {
     }
 };
 
-// Corrected validation function
 const validateUser = (data) => {
     const schema = Joi.object({
         userName: Joi.string().required().label("User Name"),

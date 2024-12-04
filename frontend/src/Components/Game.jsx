@@ -15,6 +15,7 @@ const GamePage = () => {
     const [isPaused, setIsPaused] = useState(false);
     const [showQuitOverlay, setShowQuitOverlay] = useState(false);
     const [showRestartOverlay, setShowRestartOverlay] = useState(false);
+    const [showHelp, setShowHelp] = useState(false);
     const [feedback, setFeedback] = useState("");
     const [feedbackType, setFeedbackType] = useState("");
     const [showSettings, setShowSettings] = useState(false);
@@ -170,9 +171,14 @@ const GamePage = () => {
         setShowSettings(prev => !prev);
     };
 
+    const toggleHelp = () => {
+        setIsPaused(true);
+        setShowHelp(!showHelp);
+    }
+
     return (
-            <div className="game-page">
-                {isPaused && !showQuitOverlay && !showRestartOverlay && (
+        <div className="game-page">
+            {isPaused && !showQuitOverlay && !showRestartOverlay && (
                     <div className="pause-overlay">
                         <h2>Game Paused!</h2>
                         <button onClick={togglePause}>
@@ -180,7 +186,7 @@ const GamePage = () => {
                             Resume
                         </button>
                     </div>
-                )}
+            )}
                 {showQuitOverlay && (
                     <div className="quit-overlay">
                         <h2>Are you sure you want to quit?</h2>
@@ -201,6 +207,22 @@ const GamePage = () => {
                         <button onClick={handleCancelRestart}>No</button>
                     </div>
                 )}
+                {showHelp && (
+                <div className="help-overlay">
+                    <div className="help-content">
+                        <h2>Game Instructions</h2>
+                        <p>Follow these rules to enjoy the game:</p>
+                        <ul>
+                            <li>1. Answer questions by selecting the correct option.</li>
+                            <li>2. You start with <strong>3 lives</strong>.</li>
+                            <li>3. Each wrong answer deducts 1 life.</li>
+                            <li>4. Earn <strong>10 points</strong> for every correct answer.</li>
+                            <li>5. You have <strong>30 seconds</strong> to answer each question.</li>
+                        </ul>
+                        <button onClick={toggleHelp}>Close Help</button>
+                    </div>
+                </div>
+            )}
             {gameOver ? (
                 <div className="game-over">
                     <h1 className="game-over-title">Game Over</h1>
@@ -224,7 +246,7 @@ const GamePage = () => {
                                 <button onClick={togglePause}><FaPause />{isPaused ? "Resume" : "Pause"}</button>
                                 <button onClick={handleRestart}><FaRedo />Restart</button>
                                 <button onClick={handleQuit}><FaSignOutAlt />Quit</button>
-                                <button ><FaQuestionCircle />Help</button>
+                                <button onClick={toggleHelp}><FaQuestionCircle />Help</button>
                             </div>
                         )}
                     </div>
