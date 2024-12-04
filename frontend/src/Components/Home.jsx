@@ -38,9 +38,13 @@ const Home = () => {
   }, [navigate]);
 
   const handleLogout = () => {
-    localStorage.clear();
-    navigate("/login");
+    const confirmLogout = window.confirm("Are you sure you want to log out?");
+    if (confirmLogout) {
+      localStorage.clear();
+      navigate("/login");
+    }
   };
+  
 
   const handleNewGame = () => {
     navigate("/game");
